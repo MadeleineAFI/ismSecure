@@ -1,16 +1,18 @@
 package sn.ism.cdsd.crypto;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 
 public class CryptoImpl implements ICrypto {
 
@@ -81,7 +83,16 @@ public class CryptoImpl implements ICrypto {
 
     @Override
     public SecretKey generateKey() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            SecureRandom sec=SecureRandom.getInstance("SHA1PRNG");
+            sec.setSeed("graine".getBytes());
+            javax.crypto.KeyGenerator keyGen = javax.crypto.KeyGenerator.getInstance("AES");
+            keyGen.init(256); // taille de clé : 128, 192 ou 256 bits
+            return keyGen.generateKey();
+        } catch (Exception e) {
+            Logger.getLogger(CryptoImpl.class.getName()).log(Level.SEVERE, null, e);
+            return null;
+        }
     }
 
     @Override
@@ -111,7 +122,18 @@ public class CryptoImpl implements ICrypto {
 
     @Override
     public String encrypt(String data, Key key) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            Cipher cipher=Cipher.getInstance("AES/CBC/PKCS5Padding");
+            byte[] iv="une chaine multiple de 16 et 28 yhhd".getBytes();
+            IvParameterSpec Ivspec=new IvParameterSpec(iv);
+            cipher.init(Cipher.ENCRYPT_MODE, key, Ivspec);
+
+            byte[] enc=cipher.doFinal(data.getBytes());
+            return bytesToHexString(enc);
+        } catch (Exception e){
+            Logger.getLogger(CryptoImpl.class.getName()).log(level.SEVERE,null, e);
+            return null;
+        }
     }
 
     @Override
