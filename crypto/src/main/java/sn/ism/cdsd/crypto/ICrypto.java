@@ -101,4 +101,37 @@ public interface ICrypto {
      */
     public String decrypt(String data, PrivateKey key);
 
+    /**
+     * Chiffre un fichier avec une clé secrète
+     * @param inputFile le chemin du fichier à chiffrer
+     * @param outputFile le chemin du fichier chiffré
+     * @param key la clé secrète utilisée pour le chiffrement
+     */
+    public void encryptFile(String inputFile, String outputFile, SecretKey key);
+
+    public void decryptFile(String inputFile, String outputFile, SecretKey key);
+
+    /**
+     * Déchiffre un fichier avec un mot de passe qui sera converti en clé secrète par la méthode generateKey(String password)
+     * @param inputFile le chemin du fichier à chiffrer
+     * @param outputFile le chemin du fichier chiffré
+     * @param password le mot de passe utilisé pour le chiffrement
+     */
+    public void encryptFile(String inputFile, String outputFile,String password );
+    public void decryptFile(String inputFile, String outputFile,String password );
+
+
+    /**
+     * Chiffre un fichier avec une clé publique et une clé secrète générée aléatoirement
+     * on génère une clé secrète aléatoire pour chiffrer le fichier avec AES, puis on chiffre la clé secrète avec la clé publique RSA et on stocke la clé secrète chiffrée dans le fichier de sortie
+     * le stockage se fait en hexadécimal au format: [clé secrète chiffrée en hexadécimal]:[données chiffrées en hexadécimal]
+     * @param inputFile le chemin du fichier à chiffrer
+     * @param outputFile le chemin du fichier chiffré
+     * @param publicKey la clé publique utilisée pour le chiffrement de la clé secrète
+     */
+    public void hybridEncrypt(String inputFile, String outputFile, PublicKey publicKey);
+    public void hybridDecrypt(String inputFile, String outputFile, PrivateKey privateKey);
+
+
+
 }

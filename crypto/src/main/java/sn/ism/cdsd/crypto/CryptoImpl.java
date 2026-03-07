@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.security.Key;
 import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -190,8 +191,17 @@ public class CryptoImpl implements ICrypto {
 
     @Override
     public KeyPair generateKeyPair() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        // genretate une paire de clé asymétrique RSA
+        try {
+            KeyPairGenerator kpg=KeyPairGenerator.getInstance("RSA");
+            kpg.initialize(2048);
+            return kpg.generateKeyPair();
+        } catch (Exception ex) {
+            Logger.getLogger(CryptoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;        
+        }
+
+        }
 
     @Override
     public KeyPair generateKeyPair(String algorithm) {
@@ -205,11 +215,58 @@ public class CryptoImpl implements ICrypto {
 
     @Override
     public String encrypt(String data, PublicKey key) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        try {
+            Cipher cipher=Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] enc=cipher.doFinal(data.getBytes());
+            return bytesToHexString(enc);
+        } catch (Exception ex) {
+            Logger.getLogger(CryptoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
     public String decrypt(String data, PrivateKey key) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            Cipher cipher=Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] dec=cipher.doFinal(hexStringToBytes(data));
+            return new String(dec);
+        } catch (Exception ex) {
+            Logger.getLogger(CryptoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    @Override
+    public void encryptFile(String inputFile, String outputFile, SecretKey key) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'encryptFile'");
+    }
+    @Override
+    public void decryptFile(String inputFile, String outputFile, SecretKey key) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'decryptFile'");
+    }
+    @Override
+    public void encryptFile(String inputFile, String outputFile, String password) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'encryptFile'");
+    }
+    @Override
+    public void decryptFile(String inputFile, String outputFile, String password) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'decryptFile'");
+    }
+    @Override
+    public void hybridEncrypt(String inputFile, String outputFile, PublicKey publicKey) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'hybridEncrypt'");
+    }
+    @Override
+    public void hybridDecrypt(String inputFile, String outputFile, PrivateKey privateKey) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'hybridDecrypt'");
     }
 }
